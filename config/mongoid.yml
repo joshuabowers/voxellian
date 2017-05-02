@@ -148,6 +148,8 @@ test:
 production:
   clients:
     default:
+      database: voxellian
+      
       # The standard MongoDB connection URI allows for easy
       # replica set connection setup.
       # Use environment variables or a config file to keep your
