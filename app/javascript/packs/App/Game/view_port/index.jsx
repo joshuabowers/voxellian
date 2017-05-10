@@ -1,4 +1,7 @@
 import React from 'react'
+// import voxelVextex from './voxel.vs'
+// import voxelGeometry from './voxel.gs'
+// import voxelFragment from './voxel.fs'
 
 class ViewPort extends React.Component {
   constructor() {
@@ -9,6 +12,7 @@ class ViewPort extends React.Component {
   componentDidMount() {
     console.log( 'Attempting to setup GL state...' );
     this.setupGLstate();
+    console.log( 'GL state established!' );
   }
 
   setupGLstate() {
@@ -34,10 +38,14 @@ class ViewPort extends React.Component {
     gl = element.getContext('webgl') || canvas.getContext('experimental-webjl');
 
     if( !gl ){
-      console.error( 'Unable to initialize WebGL. Your browser may not support it.' )
+      console.error( 'Unable to initialize WebGL. Your browser may not support it.' );
     }
 
     return gl;
+  }
+
+  initShaders() {
+
   }
 
   resize() {
