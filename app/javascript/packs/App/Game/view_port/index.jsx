@@ -2,10 +2,6 @@ import React from 'react'
 import { mat4, vec3, vec4 } from 'gl-matrix'
 
 class ViewPort extends React.Component {
-  static get FRAMERATE() {
-    return 15;
-  }
-
   constructor() {
     super();
     this.onResize = this.resize.bind(this);
@@ -42,7 +38,7 @@ class ViewPort extends React.Component {
     this.initShaders();
     this.initBuffers();
 
-    setInterval( this.drawScene, this.constructor.FRAMERATE );
+    requestAnimationFrame( this.drawScene );
     setTimeout( this.onResize, 10 );
   }
 
@@ -151,6 +147,8 @@ class ViewPort extends React.Component {
     this.matrixUniform( 'uMVMatrix', this.matrices.camera );
 
     this.gl.drawArrays( this.gl.TRIANGLE_STRIP, 0, 4 );
+
+    requestAnimationFrame( this.drawScene );
   }
 
   matrixUniform( identifier, matrix ) {
