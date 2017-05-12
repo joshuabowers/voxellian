@@ -1,4 +1,5 @@
 import React from 'react'
+import { mat4, vec3, vec4 } from 'gl-matrix'
 
 class ViewPort extends React.Component {
   static get FRAMERATE() {
@@ -7,8 +8,15 @@ class ViewPort extends React.Component {
 
   constructor() {
     super();
-    this.resize = this.resize.bind(this);
+    this.onResize = this.resize.bind(this);
     this.drawScene = this.drawScene.bind(this);
+
+    this.matrices = {
+      perspective: mat4.create(),
+      camera: mat4.create()
+    };
+
+    this.gl = null;
   }
 
   componentDidMount() {
@@ -18,86 +26,83 @@ class ViewPort extends React.Component {
   }
 
   setupGLstate() {
-    var gl = this.initGL( this.canvas );
+    this.initGL( this.canvas );
 
-    if( !gl ){
+    if( !this.gl ){
       return;
     }
 
-    gl.clearColor( 0.0, 0.0, 0.0, 1.0 );
-    gl.enable( gl.DEPTH_TEST );
-    gl.depthFunc( gl.LEQUAL );
-    gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT );
+    this.gl.clearColor( 0.0, 0.0, 0.0, 1.0 );
+    this.gl.enable( this.gl.DEPTH_TEST );
+    this.gl.depthFunc( this.gl.LEQUAL );
+    this.gl.clear( this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT );
 
-    window.addEventListener( 'resize', this.resize );
+    window.addEventListener( 'resize', this.onResize );
 
-    this.initShaders( gl );
-    this.initBuffers( gl );
-
-    this.setState( { gl: gl } );
+    this.initShaders();
+    this.initBuffers();
 
     setInterval( this.drawScene, this.constructor.FRAMERATE );
+    setTimeout( this.onResize, 10 );
   }
 
   initGL( element ) {
-    var gl = null;
+    this.gl = element.getContext('webgl') || canvas.getContext('experimental-webgl');
 
-    gl = element.getContext('webgl') || canvas.getContext('experimental-webgl');
-
-    if( !gl ){
+    if( !this.gl ){
       console.error( 'Unable to initialize WebGL. Your browser may not support it.' );
     }
 
-    return gl;
+    console.log( `Max Viewport Dimensions: ${ this.gl.getParameter( this.gl.MAX_VIEWPORT_DIMS ) }` );
   }
 
-  initShaders( gl ) {
-    var vertexShader = this.loadShader( gl, require( './voxel.vs' ), gl.VERTEX_SHADER );
-    var fragmentShader = this.loadShader( gl, require( './voxel.fs' ), gl.FRAGMENT_SHADER );
+  initShaders() {
+    var vertexShader = this.loadShader( require( './voxel.vs' ), this.gl.VERTEX_SHADER );
+    var fragmentShader = this.loadShader( require( './voxel.fs' ), this.gl.FRAGMENT_SHADER );
 
-    var shaderProgram = gl.createProgram();
-    gl.attachShader( shaderProgram, vertexShader );
-    gl.attachShader( shaderProgram, fragmentShader );
-    gl.linkProgram( shaderProgram );
+    this.shaderProgram = this.gl.createProgram();
+    this.gl.attachShader( this.shaderProgram, vertexShader );
+    this.gl.attachShader( this.shaderProgram, fragmentShader );
+    this.gl.linkProgram( this.shaderProgram );
 
-    if( !gl.getProgramParameter( shaderProgram, gl.LINK_STATUS ) ){
-      console.error('Unable to initialize the shader program: ' + gl.getProgramInfoLog(shaderProgram));
+    if( !this.gl.getProgramParameter( this.shaderProgram, this.gl.LINK_STATUS ) ){
+      console.error('Unable to initialize the shader program: ' + this.gl.getProgramInfoLog(this.shaderProgram));
     }
 
-    gl.useProgram( shaderProgram );
+    this.gl.useProgram( this.shaderProgram );
 
-    var vertexPositionAttribute = gl.getAttribLocation( shaderProgram, 'aVertexPosition' );
-    gl.enableVertexAttribArray( vertexPositionAttribute );
+    this.vertexPositionAttribute = this.gl.getAttribLocation( this.shaderProgram, 'aVertexPosition' );
+    this.gl.enableVertexAttribArray( this.vertexPositionAttribute );
   }
 
-  loadShader( gl, source, type ) {
+  loadShader( source, type ) {
     if( !source ) {
       console.error( `No source found for shader!` );
       return null;
     }
 
     if( !type
-      || ![ gl.VERTEX_SHADER, gl.FRAGMENT_SHADER ].includes( type ) ){
+      || ![ this.gl.VERTEX_SHADER, this.gl.FRAGMENT_SHADER ].includes( type ) ){
       console.error( `No shader type provided for shader "${ source }"!` );
       return null;
     }
 
-    var shader = gl.createShader( type );
-    gl.shaderSource( shader, source );
-    gl.compileShader( shader );
+    var shader = this.gl.createShader( type );
+    this.gl.shaderSource( shader, source );
+    this.gl.compileShader( shader );
 
-    if( !gl.getShaderParameter( shader, gl.COMPILE_STATUS  ) ) {
-      console.error( 'An error occurred compiling the shaders: ' + gl.getShaderInfoLog(shader) );
-      gl.deleteShader( shader );
+    if( !this.gl.getShaderParameter( shader, this.gl.COMPILE_STATUS  ) ) {
+      console.error( 'An error occurred compiling the shaders: ' + this.gl.getShaderInfoLog(shader) );
+      this.gl.deleteShader( shader );
       return null;
     }
 
     return shader;
   }
 
-  initBuffers( gl ) {
-    var squareVerticesBuffer = gl.createBuffer();
-    gl.bindBuffer( gl.ARRAY_BUFFER, squareVerticesBuffer );
+  initBuffers() {
+    var squareVerticesBuffer = this.gl.createBuffer();
+    this.gl.bindBuffer( this.gl.ARRAY_BUFFER, squareVerticesBuffer );
 
     var vertices = [
       1.0, 1.0, 0.0,
@@ -106,31 +111,60 @@ class ViewPort extends React.Component {
       -1.0, -1.0, 0.0
     ];
 
-    gl.bufferData( gl.ARRAY_BUFFER, new Float32Array( vertices ), gl.STATIC_DRAW );
+    this.gl.bufferData( this.gl.ARRAY_BUFFER, new Float32Array( vertices ), this.gl.STATIC_DRAW );
 
-    this.setState( { buffers: { square: squareVerticesBuffer } })
+    this.buffers = { square: squareVerticesBuffer };
+  }
+
+  onResize() {
+    this.didResize = true;
   }
 
   resize() {
-    var gl = this.state.gl;
     var canvas = this.canvas;
 
-    gl.viewport( 0, 0, canvas.width, canvas.height );
+    canvas.width = canvas.clientWidth;
+    canvas.height = canvas.clientHeight;
 
-    this.setState( { gl: gl } );
+    this.gl.viewport( 0, 0, canvas.clientWidth, canvas.clientHeight );
+
+    this.didResize = false;
   }
 
   drawScene() {
-    var gl = this.state.gl;
+    var perspective = this.matrices.perspective;
+    var camera = this.matrices.camera;
+    var cameraPosition = vec3.fromValues( 0, 0, -6.0 );
+    var canvas = this.canvas;
 
-    gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT );
+    if( this.didResize ){ this.resize(); }
 
-    gl.bindBuffer( gl.ARRAY_BUFFER, this.state.buffers.square );
-    // gl.vertexAttribPointer( )
+    this.gl.clear( this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT );
+
+    mat4.perspective( perspective, 45, this.aspectRatio(), 0.1, 100.0 );
+    mat4.fromTranslation( camera, cameraPosition );
+
+    this.gl.bindBuffer( this.gl.ARRAY_BUFFER, this.buffers.square );
+    this.gl.vertexAttribPointer( this.vertexPositionAttribute, 3, this.gl.FLOAT, false, 0, 0 );
+
+    this.matrixUniform( 'uPMatrix', this.matrices.perspective );
+    this.matrixUniform( 'uMVMatrix', this.matrices.camera );
+
+    this.gl.drawArrays( this.gl.TRIANGLE_STRIP, 0, 4 );
+  }
+
+  matrixUniform( identifier, matrix ) {
+    var uniform = this.gl.getUniformLocation( this.shaderProgram, identifier );
+    this.gl.uniformMatrix4fv( uniform, false, new Float32Array( matrix ) );
   }
 
   get canvas() {
     return document.getElementById('view-port');
+  }
+
+  aspectRatio() {
+    var canvas = this.canvas;
+    return canvas ? canvas.clientWidth / canvas.clientHeight : 0.0;
   }
 
   render() {
