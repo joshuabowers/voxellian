@@ -7,9 +7,16 @@ class Game extends React.Component {
   constructor( props ) {
     super( props )
     this.fpsCounter = { previousSecond: Date.now(), count: 1 };
-    this.state = { framesPerSecond: 0 };
+    this.state = {
+      framesPerSecond: 0,
+      resolution: {
+        width: 0,
+        height: 0
+      }
+    };
 
     this.handleFrame = this.handleFrame.bind(this);
+    this.handleResize = this.handleResize.bind(this);
   }
 
   handleFrame( frameID ) {
@@ -26,12 +33,17 @@ class Game extends React.Component {
     }
   }
 
+  handleResize( newWidth, newHeight ) {
+    this.setState( { resolution: { width: newWidth, height: newHeight } } );
+  }
+
   render() {
     const framesPerSecond = this.state.framesPerSecond;
+    const resolution = this.state.resolution;
     return (
       <div className='game'>
-        <ViewPort onFrame={ this.handleFrame } />
-        <FrameCounter framesPerSecond={ framesPerSecond } />
+        <ViewPort onFrame={ this.handleFrame } onResize={ this.handleResize } />
+        <FrameCounter framesPerSecond={ framesPerSecond } resolution={ resolution } />
       </div>
     );
   }

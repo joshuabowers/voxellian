@@ -4,7 +4,7 @@ import { mat4, vec3, vec4 } from 'gl-matrix'
 class ViewPort extends React.Component {
   constructor(props) {
     super(props);
-    this.onResize = this.resize.bind(this);
+    this.windowResize = this.resize.bind(this);
     this.drawScene = this.drawScene.bind(this);
 
     this.matrices = {
@@ -33,13 +33,13 @@ class ViewPort extends React.Component {
     this.gl.depthFunc( this.gl.LEQUAL );
     this.gl.clear( this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT );
 
-    window.addEventListener( 'resize', this.onResize );
+    window.addEventListener( 'resize', this.windowResize );
 
     this.initShaders();
     this.initBuffers();
 
     requestAnimationFrame( this.drawScene );
-    setTimeout( this.onResize, 10 );
+    setTimeout( this.windowResize, 10 );
   }
 
   initGL( element ) {
@@ -112,7 +112,7 @@ class ViewPort extends React.Component {
     this.buffers = { square: squareVerticesBuffer };
   }
 
-  onResize() {
+  windowResize() {
     this.didResize = true;
   }
 
@@ -125,6 +125,8 @@ class ViewPort extends React.Component {
     this.gl.viewport( 0, 0, canvas.clientWidth, canvas.clientHeight );
 
     this.didResize = false;
+
+    this.props.onResize( canvas.clientWidth, canvas.clientHeight );
   }
 
   frame( frameID ) {
