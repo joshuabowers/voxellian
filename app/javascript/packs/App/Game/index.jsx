@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from './styles'
-import ViewPort from './view_port'
+import ViewPort from './ViewPort'
 import FrameCounter from './FrameCounter'
 
 class Game extends React.Component {
