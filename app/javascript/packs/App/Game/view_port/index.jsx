@@ -2,8 +2,8 @@ import React from 'react'
 import { mat4, vec3, vec4 } from 'gl-matrix'
 
 class ViewPort extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.onResize = this.resize.bind(this);
     this.drawScene = this.drawScene.bind(this);
 
@@ -127,6 +127,10 @@ class ViewPort extends React.Component {
     this.didResize = false;
   }
 
+  frame( frameID ) {
+    this.props.onFrame( frameID );
+  }
+
   drawScene() {
     var perspective = this.matrices.perspective;
     var camera = this.matrices.camera;
@@ -148,7 +152,7 @@ class ViewPort extends React.Component {
 
     this.gl.drawArrays( this.gl.TRIANGLE_STRIP, 0, 4 );
 
-    requestAnimationFrame( this.drawScene );
+    this.frame( requestAnimationFrame( this.drawScene ) );
   }
 
   matrixUniform( identifier, matrix ) {

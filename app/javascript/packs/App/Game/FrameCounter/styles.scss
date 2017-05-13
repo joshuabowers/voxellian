@@ -1,0 +1,29 @@
+:root {
+  --glow-color: #10c9fa;
+  --view-port-frame: #ad801b;
+}
+
+.frame-counter {
+  position: absolute;
+  padding: 0.75em;
+  right: 1em;
+  bottom: -3.75em;
+  color: white;
+  background-image: radial-gradient( ellipse, #7cb4c6 , transparent 75% );
+  text-shadow: 0 0 20px var(--glow-color);
+
+  &::before {
+    content: ' ';
+    position: absolute;
+    z-index: -1;
+    top: -0.75em;
+    // margin: 0 auto;
+    right: 0.75em;
+    padding: 0.25em 1em;
+    border: 0.5em solid var(--view-port-frame);
+    border-radius: 0.5em;
+    background: var(--glow-color);
+    transform: rotateX( 35deg );
+    box-shadow: 0 -0.25em 0.1em yellow
+  }
+}
