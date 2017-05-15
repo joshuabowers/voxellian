@@ -21,6 +21,10 @@ class ViewPort extends React.Component {
     console.log( 'GL state established!' );
   }
 
+  componentWillUnmount() {
+    console.log( 'Removing GL context...' );
+  }
+
   setupGLstate() {
     this.initGL( this.canvas );
 
@@ -172,7 +176,7 @@ class ViewPort extends React.Component {
   }
 
   render() {
-    return <canvas id='view-port' />;
+    return <canvas id='view-port' onMouseMove={ this.props.onMouseMove } />;
   }
 }
 

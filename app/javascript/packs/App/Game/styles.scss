@@ -1,0 +1,17 @@
+.game {
+  position: absolute;
+  width: 80vw;
+  height: 80vh;
+  left: calc( 10vw - 1rem );
+  top: calc( 10vh - 1rem );
+  border: 1rem solid #ad801b;
+  border-radius: 1rem;
+  z-index: 10;
+  box-shadow: 0 0 5rem black;
+  background-color: black;
+
+  canvas {
+    width: 100%;
+    height: 100%;
+  }
+}

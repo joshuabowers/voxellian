@@ -12,11 +12,13 @@ class Game extends React.Component {
       resolution: {
         width: 0,
         height: 0
-      }
+      },
+      mouse: null
     };
 
     this.handleFrame = this.handleFrame.bind(this);
     this.handleResize = this.handleResize.bind(this);
+    this.handleMouseMove = this.handleMouseMove.bind(this);
   }
 
   handleFrame( frameID ) {
@@ -37,12 +39,17 @@ class Game extends React.Component {
     this.setState( { resolution: { width: newWidth, height: newHeight } } );
   }
 
+  handleMouseMove( e ) {
+    e.preventDefault();
+    this.setState( { mouse: e } );
+  }
+
   render() {
-    const framesPerSecond = this.state.framesPerSecond;
-    const resolution = this.state.resolution;
+    const { framesPerSecond, resolution, mouse } = this.state;
     return (
       <div className='game'>
-        <ViewPort onFrame={ this.handleFrame } onResize={ this.handleResize } />
+        <ViewPort onFrame={ this.handleFrame } onResize={ this.handleResize }
+          onMouseMove={ this.handleMouseMove } mouse={ mouse } />
         <FrameCounter framesPerSecond={ framesPerSecond } resolution={ resolution } />
       </div>
     );
