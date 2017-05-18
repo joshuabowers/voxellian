@@ -1,9 +1,9 @@
 import Model from './Model'
 
 class Voxel extends Model {
-  constructor() {
-    super();
-  }
+  // constructor() {
+  //   super();
+  // }
 }
 
 export default Voxel;
