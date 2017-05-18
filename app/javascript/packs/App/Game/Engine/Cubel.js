@@ -1,9 +1,9 @@
 import Voxel from './Voxel'
 
-class CubeVox extends Voxel {
+class Cubel extends Voxel {
   constructor() {
     super();
   }
 }
 
-export default CubeVox;
+export default Cubel;

@@ -42,6 +42,8 @@ class ViewPort extends React.Component {
     this.initShaders();
     this.initBuffers();
 
+    this.props.onGLInitialized( this.gl );
+
     requestAnimationFrame( this.drawScene );
     setTimeout( this.windowResize, 10 );
   }

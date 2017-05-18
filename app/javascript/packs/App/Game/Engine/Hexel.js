@@ -1,9 +1,9 @@
 import Voxel from './Voxel'
 
-class HexVox extends Voxel {
+class Hexel extends Voxel {
   constructor() {
     super();
   }
 }
 
-export default HexVox;
+export default Hexel;

@@ -2,6 +2,7 @@ import React from 'react'
 import styles from './styles'
 import ViewPort from './ViewPort'
 import FrameCounter from './FrameCounter'
+import Scene from './Engine'
 
 class Game extends React.Component {
   constructor( props ) {
@@ -19,6 +20,11 @@ class Game extends React.Component {
     this.handleFrame = this.handleFrame.bind(this);
     this.handleResize = this.handleResize.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
+    this.handleGLInitialized = this.handleGLInitialized.bind(this);
+  }
+
+  handleGLInitialized( gl ) {
+    console.log( gl );
   }
 
   handleFrame( frameID ) {
@@ -49,7 +55,8 @@ class Game extends React.Component {
     return (
       <div className='game'>
         <ViewPort onFrame={ this.handleFrame } onResize={ this.handleResize }
-          onMouseMove={ this.handleMouseMove } mouse={ mouse } />
+          onMouseMove={ this.handleMouseMove } mouse={ mouse }
+          onGLInitialized={ this.handleGLInitialized } />
         <FrameCounter framesPerSecond={ framesPerSecond } resolution={ resolution } />
       </div>
     );
