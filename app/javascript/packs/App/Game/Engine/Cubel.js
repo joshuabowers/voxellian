@@ -1,26 +1,10 @@
 import Voxel from './Voxel'
 
 class Cubel extends Voxel {
-  // constructor() {
-  //   super();
-  // }
-
-  original() {
-    var squareVerticesBuffer = this.gl.createBuffer();
-    this.gl.bindBuffer( this.gl.ARRAY_BUFFER, squareVerticesBuffer );
-
-    var vertices = [
-      1.0, 1.0, 0.0,
-      -1.0, 1.0, 0.0,
-      1.0, -1.0, 0.0,
-      -1.0, -1.0, 0.0
-    ];
-
-    this.gl.bufferData( this.gl.ARRAY_BUFFER, new Float32Array( vertices ), this.gl.STATIC_DRAW );
-
-    this.buffers = { square: squareVerticesBuffer };
-  }
-
+  // This should probably be either in a separate class from individual instances,
+  // or should be static from the perspective of the instances. None of this data
+  // is likely to change after it is initialized, and should be the same for each
+  // instance, so there should only ever be a single copy of it.
   createBuffer() {
     let vertices = [
        0.5,  0.5,  0.5, // 0: front top right
@@ -47,18 +31,15 @@ class Cubel extends Voxel {
       1, 2, 7,  // Bottom face, front
     ];
 
-    this.buffers.vertices = this.gl.createBuffer();
-    this.gl.bindBuffer( this.gl.ARRAY_BUFFER, this.buffers.vertices );
-    this.gl.bufferData( this.gl.ARRAY_BUFFER, new Float32Array( vertices ), this.gl.STATIC_DRAW );
-
-    this.buffers.indices = this.gl.createBuffer();
-    this.gl.bindBuffer( this.gl.ELEMENT_ARRAY_BUFFER, this.buffers.indices );
-    this.gl.bufferData( this.gl.ELEMENT_ARRAY_BUFFER, new Uint16Array( indices ), this.gl.STATIC_DRAW );
+    this.buffers.vertices = this.bufferData( this.gl.ARRAY_BUFFER, new Float32Array( vertices ) );
+    this.buffers.indices = this.bufferData( this.gl.ELEMENT_ARRAY_BUFFER, new Uint16Array( indices ) );
   }
 
   render() {
     this.gl.bindBuffer( this.gl.ARRAY_BUFFER, this.buffers.vertices );
     this.gl.bindBuffer( this.gl.ELEMENT_ARRAY_BUFFER, this.buffers.indices );
+
+    this.shaderInput();
 
     // Here, the code for setting the position attribute and model uniform should occur.
     // Delegate to super?
