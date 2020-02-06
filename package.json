@@ -1,0 +1,9 @@
+{
+  "name": "voxellian",
+  "version": "1.0.0",
+  "description": "A voxel-ish tactical RPG written in WebGL",
+  "main": "index.js",
+  "repository": "https://github.com/joshuabowers/voxellian.git",
+  "author": "Joshua Bowers <joshua.bowers+code@gmail.com>",
+  "license": "MIT"
+}
