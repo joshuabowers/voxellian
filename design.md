@@ -49,7 +49,17 @@ Cubes should be smaller than hexagonal prisms, as they collectively form a voxel
 
 For efficiency when rendering things, volumetric objects should not utilize the full 1000-2000 cube grid spaces they have access to! Further, unless needed for transparency, the internals of the objects should definitely not be rendered, nor even necessarily modeled.
 
+(Note: these numbers are based off of very rough calculations; they will be subject to change as the game is developed.)
+
 ### Aesthetic
+
+The two types of principle geometry in voxellian will have drastically different aesthetics. Cubes, being intentionally smaller, should be thought of analogously to pixels within a three dimensional space---i.e. voxels. Hexagonal prisms, on the other hand, are larger and should be capable of showing more surface detail---though hopefully without having to otherwise increase the amount of surface topology that might imply.
+
+While the rendering aesthetics of these two concerns are subject to further decision making as development progresses, two distinctive styles have coalesced. 
+
+For cubes, this will likely be either a [toon material](https://threejs.org/docs/index.html#api/en/materials/MeshToonMaterial) or a [phong](https://threejs.org/docs/index.html#api/en/materials/MeshPhongMaterial) material. While the toon material provides a unique visual effect, it might be lost on flat, non-curved surfaces, of which the volumetric objects will be comprised. Ergo, phong might make slightly more sense. In either case, the individual cubes can have specific material details applied to them, enabling each to form part of a larger picture. Note, the cubes should not be texture mapped: the entire point to use them to generate a low-res 3D model.
+
+For prisms, ideally, either the [standard material](https://threejs.org/docs/index.html#api/en/materials/MeshStandardMaterial) or the [physical material](https://threejs.org/docs/index.html#api/en/materials/MeshPhysicalMaterial)---being implementations of PBR---would be ideal. (As these materials are much more expensive to implement, they might not be feasible for the intended scale of the game. Phong might be a suitable fallback.) In either of the ideal cases, a series of textures define physical aspects of the geometry they apply to, enabling, if done well, highly realistic and dynamic looking visuals. For more information about the realm of the possible, consult the article about [PBR](https://learnopengl.com/PBR/Theory) at learnopengl.com.
 
 ## State Machine
 
