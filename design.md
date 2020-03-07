@@ -22,7 +22,7 @@
   Further additional components may be developed in the future to provide new functionality. For example, if multiplayer becomes a desirable stretch goal, the server would likely provide a mechanism to allow clients to communicate to one another via websockets.
 * The client is much more complicated, as it is responsible for: Game logic, scripting/scene-planning, UI/UX, 3D rendering, amongst other concepts.
     1. 3D rendering: Voxellian is, at its core, a video game. As such, it has visual rendering which needs happening. Modern browsers support 3D via an OpenGL derived technology called WebGL.[WebGPU] WebGL provides a means to turn a HTML `<canvas>` element into a 3D rendering pipeline; this pipeline allows for the definition of both a fragment and a vertex shader in the OpenGL ES Shading Language (GLSL ES). While not as flexible as desktop variants, this should nevertheless provide a degree of interesting rendering potential for the game.
-    2. UI/UX: The user interface for the game will be rendered via React. A component will be designed to control and manage the `<canvas>` WebGL context; additional components will be layered on top of this previous component to render the UI. This sidesteps the need to develop rendering logic for UI dialogs and text within WebGL; the browser already is capable of doing this! (Note: untested, might fall over, burn down, then sink unceremoniously into a swamp.) These React components will have their data provided by a Redux store.
+    2. UI/UX: The user interface for the game will be rendered via React. A component will be designed to control and manage the `<canvas>` WebGL context; additional components will be layered on top of this previous component to render the UI. This sidesteps the need to develop rendering logic for UI dialogs and text within WebGL; the browser already is capable of doing this! (Note: untested, might burn down, fall over, then sink unceremoniously into a swamp.) These React components will have their data provided by a Redux store.
     3. Game logic could---potentially---be handled as a side-effect of providing the data management for React/Redux: the client will have Redux Saga present for performing event-based and asynchronous activities---e.g. network transfers; this saga pipeline could be extended to also handle hooks for a script system, as well as provide a way of actually defining the main game loop. This system would be almost completely decoupled from the rendering pipelines, so experimentation would be needed to ascertain viability.
 
 [WebGPU]: A newer technology, intended to both be a successor to WebGL, and less saddled with OpenGL cruft, called [WebGPU](https://en.wikipedia.org/wiki/WebGPU), is under development. It would be worth spending time ascertaining if it might be under a release cycle for modern browsers as a more feature robust alternative.
@@ -45,7 +45,7 @@ Hexagonal prisms will define unit measurements for the game: each prism, unless 
 
 Given this, the maximum size for standard humanoid characters would therefore be 1 horizontal prism by 2 horizontal prisms. This would equate to a volume of about 1.3 m<sup>3</sup>.
 
-Cubes should be smaller than hexagonal prisms, as they collectively form a voxellized volumetric object. If the greatest extent of a cuboid grid defined within the volume of a single prism (~ 0.65 m<sup>3</sup>) is 10x10x10 cubes---i.e. 1000---then an individual cube would have a volume roughly of 0.00065 m<sup>3</sup>; this would translate to a side length of about 0.087 m.
+Cubes should be smaller than hexagonal prisms, as they collectively form a voxelized volumetric object. If the greatest extent of a cuboid grid defined within the volume of a single prism (~ 0.65 m<sup>3</sup>) is 10x10x10 cubes---i.e. 1000---then an individual cube would have a volume roughly of 0.00065 m<sup>3</sup>; this would translate to a side length of about 0.087 m.
 
 For efficiency when rendering things, volumetric objects should not utilize the full 1000-2000 cube grid spaces they have access to! Further, unless needed for transparency, the internals of the objects should definitely not be rendered, nor even necessarily modeled.
 
@@ -62,6 +62,16 @@ For cubes, this will likely be either a [toon material](https://threejs.org/docs
 For prisms, ideally, either the [standard material](https://threejs.org/docs/index.html#api/en/materials/MeshStandardMaterial) or the [physical material](https://threejs.org/docs/index.html#api/en/materials/MeshPhysicalMaterial)---being implementations of PBR---would be ideal. (As these materials are much more expensive to implement, they might not be feasible for the intended scale of the game. Phong might be a suitable fallback.) In either of the ideal cases, a series of textures define physical aspects of the geometry they apply to, enabling, if done well, highly realistic and dynamic looking visuals. For more information about the realm of the possible, consult the article about [PBR](https://learnopengl.com/PBR/Theory) at learnopengl.com.
 
 ## State Machine
+
+The game and its user interface will be---partially---controlled via a state machine. Current thought is to utilize redux saga to manage relationships between states, with dispatched actions to the redux store triggering state changes within the machine. The state machine itself may not be monolithic: there might be several to manage specific subsystems.
+
+The state machines themselves are relatively trivial: they define transitional workflows to trigger alterations to the user interface or within the rendering context. Such systems are defined to ensure that UI components are rendered only when needed---as the user requests them, effectively.
+
+For example, take into consideration a loop defined by the user being presented with the game's title screen upon first accessing the site, then being presented with a login/load game screen(s), followed by access to the game save; eventually the user decides to exit (or is timed out), or logs out, any of which causes the game to return to the title screen. Figuratively, such a workflow might be represented via:
+
+```
+titleScreen -> logIn -> selectSave -> loading -> game -> logOut -> titleScreen
+```
 
 ## Game play
 
