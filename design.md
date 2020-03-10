@@ -76,3 +76,39 @@ titleScreen -> logIn -> selectSave -> loading -> game -> logOut -> titleScreen
 ## Game play
 
 ## Setting
+
+Voxellian takes place in Consortium One, referred to by many of its inhabitants as The City, previously Xell, which has layered over it a virtualized meta-reality known as Voxellia. In recent history, a VR plague outbreak presented an opportunity for a cabal of corporate interests to overthrow the government and assume control, rebranding the city in the process. This process is yet complete: remnants of the previous government are fighting a rearguard war to take back power. Meanwhile, between the VR plague and the tumultuous political machinations, a group of everyday citizens have banded together to protect themselves and overthrow all forms of rule.
+
+Consortium One is dirty, dank, in disrepair. A warzone. It always seems to be night, here; likewise, the weather is inclement and miserable.
+
+Voxellia offers a literal escape from reality. It is lush, vibrant, colorful, happy. A pablum to ensnare and control the masses, while also providing tools for social engagement and organizing.
+
+## Factions
+
+Three player factions vie for control of The City, while a fourth, unplayable faction presents an ever present threat to all.
+
+### The Anarchies
+
+A group of ragtag citizens who banded together, originally, to protect themselves from spread of the VR plague; after the overthrow of the government and the sequestration of resources by the Consortium, they refocused their efforts towards revolution.
+
+Anarchists who believe in social ownership of production and direct democracy; mostly younger, and overwhelmingly immersed into Voxellia.
+
+### The Sorties
+
+The corporations which formed The Consortium; "Sorties" is slang from the Anarchies' pidgin. Ultra-capitalists, with delusions of meritocracy. In reality, most of their C-suites failed upward due to social privilege. The Consortium is structurally diverse: their membership includes most of the major corporations which operated within The City, touching upon most of the aspects of life for everyday citizens.
+
+Their workforce is largely, though unofficially, caste based: C-suites are filled with nepotism, corruption, and incompetence; wage slaves are fed propaganda about better tomorrows and promised promotions. True believers exist, but the bare-faced self-serving nature of the elite opens opportunities for Anarchies to inveigle and subvert. This stratification is largely the reason why complete overthrow of the previous government has yet to occur.
+
+### The Reaucrats
+
+The Bureaucracy of Xell, a democratic republic city state which, through the shattering of norms by bad-faith politicians, succumbed to corruption and gridlock. Unable to act to counter the VR plague, and through the machinations of politicos bought by the nascent Consortium, overthrown.
+
+Remnants of The Bureaucracy, known as "Reaucrats" in the Anarchies' pidgin, comprised primarily of public safety and IT support personnel, fight to restore both order and government. 
+
+### The Unrezzed
+
+Roughly a year prior to the start of Voxellian, a mysterious plague started spreading through Voxellia. Predominantly affecting citizens with implanted augmentations for accessing and controlling the VR environment, the plague can, nevertheless, jump temporarily to users with less permanent access gear.
+
+Affected users are zombified, metaphysically: they lose all sense of self in a overarching hivemind, reduced to mere puppets for the collective id. The Unrezzed have no goal, nor, by all accounts, even a consciousness. They want to spread the plague to as many hosts as possible.
+
+IRL, citizens who have contracted the plague do not showcase much in the way of physical symptoms. They might appear mildly listless and speak with an awkward intonation and cadence. Otherwise, unremarkable. This allows the plague to more effectively camouflage itself to spread. Within Voxellia, however, avatars are twisted into impossible mockeries of normalcy. 
