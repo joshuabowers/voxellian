@@ -19,5 +19,20 @@
     "nodemon": "^2.0.2",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0"
+  },
+  "engines": {
+    "node": "13.x"
+  },
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "seed": "node --experimental-modules ./server/scripts/create_admin.js",
+    "start": "nodemon --experimental-modules index.js",
+    "heroku-postbuild": "cd client && yarn install && yarn build"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "client/*"
+    ]
   }
 }
