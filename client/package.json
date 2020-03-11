@@ -44,6 +44,17 @@
     "@storybook/addon-links": "^5.3.14",
     "@storybook/addons": "^5.3.14",
     "@storybook/preset-create-react-app": "^2.0.0",
-    "@storybook/react": "^5.3.14"
+    "@storybook/react": "^5.3.14",
+    "husky": ">=4",
+    "lint-staged": ">=10",
+    "prettier": "1.19.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,css,md}": "prettier --write"
   }
 }
