@@ -5,5 +5,19 @@
   "main": "index.js",
   "repository": "https://github.com/joshuabowers/voxellian.git",
   "author": "Joshua Bowers <joshua.bowers+code@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt": "^4.0.1",
+    "chalk": "^3.0.0",
+    "cookie-session": "^1.4.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-list-endpoints": "^4.0.1",
+    "helmet": "^3.21.3",
+    "heroku-ssl-redirect": "^0.0.4",
+    "mongoose": "^5.9.4",
+    "nodemon": "^2.0.2",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0"
+  }
 }
