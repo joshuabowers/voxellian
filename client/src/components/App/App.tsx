@@ -2,7 +2,7 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-const App = () => {
+export const App = () => {
   return (
     <div className="App">
       <header className="App-header">
@@ -22,5 +22,3 @@ const App = () => {
     </div>
   );
 }
-
-export default App;
