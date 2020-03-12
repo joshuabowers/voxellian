@@ -14,7 +14,7 @@ const persistConfig = {
   stateReconciler: autoMergeLevel2
 };
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+const persistedReducer = persistReducer<AppState>(persistConfig, rootReducer);
 
 export const configureStore = (preloadedState?: AppState) => {
   const environment = process.env.NODE_ENV;
@@ -42,7 +42,7 @@ export const configureStore = (preloadedState?: AppState) => {
   if (environment !== 'production' && module.hot) {
     module.hot.accept('./reducers', () => {
       const nextRootReducer = require('./reducers').rootReducer;
-      store.replaceReducer(persistReducer(persistConfig, nextRootReducer));
+      store.replaceReducer(persistReducer<AppState>(persistConfig, nextRootReducer));
     });
   }
 
