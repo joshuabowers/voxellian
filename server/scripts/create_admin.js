@@ -15,7 +15,8 @@ connect().then( async (connection) => {
       console.info( 'Found preexisting user:', user );
     } else {
       console.log( 'No user found; creating' );
-      User.create(attributes);
+      const created = await User.create(attributes);
+      console.log( 'Created admin user:', created.email );
     }  
   } catch( err ){
     console.error( err );
