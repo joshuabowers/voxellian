@@ -51,6 +51,12 @@ For efficiency when rendering things, volumetric objects should not utilize the 
 
 (Note: these numbers are based off of very rough calculations; they will be subject to change as the game is developed.)
 
+#### Hexagonal Prism
+
+Can be easily created in Blender via a Cylinder Mesh with just 6 vertices. For current testing, a radius length of 0.577 m results in a hexagonal cross-section where the side-to-side diameter (as opposed to the vertex-to-vertex diameter) is 1 m. (As a regular hexagon can be represented as 6 equilateral triangles, the height of a singular equilateral triangle with a side length of 0.577 m is about 0.5 m.)
+
+The centroid of horizontally adjacent prisms in x would be, therefore, +/- 1 m. For the other 4 prisms, on the diagonals, the distances would be +/- 0.5 m in x, +/- 0.866 m in y, depending upon relative orientation. (For the latter value: the right triangle formed from the centroid of the first prism, the hypotenuse formed to the centroid of an adjacent diagonal prism, and the sts diameter mentioned above has two known values: 1, for the hypotenuse, and 0.5 for the diameter; this yields, via the pythagorean theorem, 0.866 for the remaining side.) 
+
 ### Aesthetic
 
 The two types of principle geometry in voxellian will have drastically different aesthetics. Cubes, being intentionally smaller, should be thought of analogously to pixels within a three dimensional space---i.e. voxels. Hexagonal prisms, on the other hand, are larger and should be capable of showing more surface detail---though hopefully without having to otherwise increase the amount of surface topology that might imply.
