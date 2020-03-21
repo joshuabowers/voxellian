@@ -1,15 +1,15 @@
 import React from 'react';
 import { Canvas } from 'react-three-fiber';
-import { Cubel } from 'geometry/Cubel';
-// import styles from './App.module.css';
+import { Map } from 'geometry/Map';
+import { SceneSetup } from 'geometry/SceneSetup';
+
+const gridTest = process.env.PUBLIC_URL + "/maps/hexagonal-grid-test.glb";
 
 export const App = () => {
   return (
     <Canvas>
-      <ambientLight />
-      <pointLight position={[10,10,10]} />
-      <Cubel position={[-1.2, 0, 0]} />
-      <Cubel position={[1.2, 0, 0]} />
+      <SceneSetup />
+      <Map url={gridTest} />
     </Canvas>
-  );
-}
+  )
+};
