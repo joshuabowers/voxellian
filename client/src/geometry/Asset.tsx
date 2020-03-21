@@ -1,12 +1,13 @@
 import React from 'react';
+import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { useLoader } from 'react-three-fiber';
+import { ReactThreeFiber, useLoader } from 'react-three-fiber';
 
 interface AssetDetails {
   url: string;
 }
 
-export type AssetProps = AssetDetails & Partial<THREE.Object3D>;
+export type AssetProps = AssetDetails & ReactThreeFiber.Object3DNode<THREE.Mesh, typeof THREE.Mesh>;
 
 /**
  * Loads a GLTF asset located at url. 
