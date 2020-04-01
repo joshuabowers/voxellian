@@ -2821,6 +2821,11 @@ aws4@^1.8.0:
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.9.1.tgz#7e33d8f7d449b3f673cd72deb9abdc552dbe528e"
   integrity sha512-wMHVg2EOHaMRxbzgFJ9gtjOOCrI80OHLG14rxi28XwOW8ux6IiEbRCGGGqCtdAIg4FQCbW20k9RsT4y3gJlFug==
 
+axis.js@1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/axis.js/-/axis.js-1.2.1.tgz#092de84493789e1f822aa2eee592c7e3bc4de8fb"
+  integrity sha1-CS3oRJN4nh+CKqLu5ZLH47xN6Ps=
+
 axobject-query@^2.0.2:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/axobject-query/-/axobject-query-2.1.1.tgz#2a3b1271ec722d48a4cd4b3fcc20c853326a49a7"
@@ -6329,6 +6334,13 @@ hoist-non-react-statics@^3.1.0, hoist-non-react-statics@^3.3.0:
   integrity sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==
   dependencies:
     react-is "^16.7.0"
+
+honeycomb-grid@^3.1.4:
+  version "3.1.4"
+  resolved "https://registry.yarnpkg.com/honeycomb-grid/-/honeycomb-grid-3.1.4.tgz#87218edb0042fedc8ea3142e5635d7cc4e95a8e9"
+  integrity sha512-6eTrx+gqXOAiPnDKtUihX46MEfQhkK0r3j2LPI99kQpQSU0U0ClGjM4OJ4mqTA4WYRoqOtVamHF3A1DRe+VCQA==
+  dependencies:
+    axis.js "1.2.1"
 
 hosted-git-info@^2.1.4:
   version "2.8.5"

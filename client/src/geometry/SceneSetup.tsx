@@ -17,7 +17,7 @@ export const SceneSetup = () => {
   return (
     <>
       <orbitControls args={[camera, domElement]} 
-        maxDistance={12.5} minDistance={2.5} />
+        maxDistance={20} minDistance={10} />
       <ambientLight />
       <pointLight position={[10,10,10]} />
     </>
