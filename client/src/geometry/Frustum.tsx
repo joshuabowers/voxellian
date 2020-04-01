@@ -14,7 +14,7 @@ const defaultFrustum: FrustumProps = {
 
 export const Frustum = (props: FrustumProps) => {
   const { radius, layers } = {...defaultFrustum, ...props};
-  if( !radius || !layers ){ throw new Error("raidus or layers missing."); }
+  if( !radius || !layers ){ throw new Error("radius or layers missing."); }
   const plates = [...Array(layers).keys()].map( layer => (
     <HexagonalPlate key={layer} 
                     radius={radius - layer} 

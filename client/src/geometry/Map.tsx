@@ -16,17 +16,18 @@ export const Map = (props: AssetProps) => {
   const [isHovered, setHover] = useState(false);
   const [pointerPosition, setPointer] = useState<Vector3>();
   return (
-    <Suspense fallback={<Hexel />}>
-      <group>
-        <Asset {...props}
-          onPointerOver={e => setHover(true)}
-          onPointerOut={e => setHover(false)}
-          onPointerMove={e => setPointer(e.point)}
-        />
-        <Dom position={pointerPosition}>
-          <ToolTip isVisible={isHovered}/>
-        </Dom>
-      </group>
-    </Suspense>
+    <group></group>
+    // <Suspense fallback={}>
+    //   <group>
+    //     <Asset {...props}
+    //       onPointerOver={e => setHover(true)}
+    //       onPointerOut={e => setHover(false)}
+    //       onPointerMove={e => setPointer(e.point)}
+    //     />
+    //     <Dom position={pointerPosition}>
+    //       <ToolTip isVisible={isHovered}/>
+    //     </Dom>
+    //   </group>
+    // </Suspense>
   )
 }
