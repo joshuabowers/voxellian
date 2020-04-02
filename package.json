@@ -7,6 +7,7 @@
   "author": "Joshua Bowers <joshua.bowers+code@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@types/webpack-env": "^1.15.1",
     "bcrypt": "^4.0.1",
     "chalk": "^3.0.0",
     "cookie-session": "^1.4.0",
@@ -28,7 +29,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "seed": "node --experimental-modules ./server/scripts/create_admin.js",
     "start": "nodemon --experimental-modules index.js",
-    "heroku-postbuild": "cd client && NODE_ENV=production yarn install && NODE_ENV=production yarn build"
+    "heroku-postbuild": "cd client && yarn install && yarn build"
   },
   "nodemonConfig": {
     "ignore": [
