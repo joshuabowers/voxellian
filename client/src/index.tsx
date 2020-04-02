@@ -25,6 +25,8 @@ const renderApp = () =>
 
 // ReactDOM.render(<App />, document.getElementById('root'));
 
+console.log( process.env.PUBLIC_URL );
+
 if (process.env.NODE_ENV !== 'production' && module.hot) {
   module.hot.accept('./components/App', renderApp);
 }
