@@ -1,5 +1,4 @@
 import React, { useMemo } from 'react';
-// import { ReactThreeFiber } from 'react-three-fiber';
 import { defineGrid, extendHex } from 'honeycomb-grid';
 import { Vector3 } from 'three';
 import { Hexel } from './Hexel';
@@ -20,17 +19,17 @@ export const HexagonalPlate = (props: HexagonalPlateProps) => {
     grid.forEach( hex => {
       const point = hex.toPoint();
       const coordinates = hex.toString();
-      const position = new Vector3( point.x, -props.z, point.y );
+      const position = new Vector3( point.x, -props.z + (-0.5 + Math.random()), point.y );
       result.push(
-        <Hexel key={coordinates} coordinates={hex} position={position} color={hex.color} />
-        // <mesh key={coordinates} position={position}>
-        //   <cylinderBufferGeometry attach='geometry' args={[1,1,1, 6]}/>
-        //   <meshStandardMaterial attach='material' color={hex.color} />       
-        // </mesh>
+        <Hexel 
+          key={coordinates} 
+          coordinates={hex} 
+          position={position} 
+          color={hex.color} />
       );
     })
     return result;
-  }, [props.radius, props.z]);
+  }, [props]);
 
   return (
     <group>

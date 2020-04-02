@@ -14,9 +14,11 @@ extend({ OrbitControls })
 
 export const SceneSetup = () => {
   const {camera, gl: {domElement}} = useThree();
+  console.log( camera );
   return (
     <>
       <orbitControls args={[camera, domElement]} 
+        // minZoom={20} maxZoom={40}/>
         maxDistance={20} minDistance={10} />
       <ambientLight />
       <pointLight position={[10,10,10]} />

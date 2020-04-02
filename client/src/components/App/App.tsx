@@ -1,17 +1,14 @@
 import React from 'react';
 import { Canvas } from 'react-three-fiber';
-// import { Map } from 'geometry/Map';
 import { SceneSetup } from 'geometry/SceneSetup';
-import { Frustum } from 'geometry/Frustum';
-
-// const gridTest = process.env.PUBLIC_URL + "/maps/hexagonal-grid-test.glb";
+import { Sector } from 'geometry/Sector';
 
 export const App = () => {
   return (
-    <Canvas>
+    // <Canvas orthographic camera={{position: [0,1,1], near: -20}}>
+    <Canvas camera={{position: [0,5,5]}}>
       <SceneSetup />
-      <Frustum />
-      {/* <Map url={gridTest} /> */}
+      <Sector />
     </Canvas>
   )
 };
