@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { extendHex, defineGrid } from 'honeycomb-grid';
 import { ReactThreeFiber } from 'react-three-fiber';
-import { InstancedMesh, Vector3, CylinderBufferGeometry, Matrix4 } from 'three';
+import { InstancedMesh, Vector3, CylinderBufferGeometry, Matrix4, DoubleSide } from 'three';
 import { CellTypeFactory } from './CellTypeFactory';
 import { CellType } from './CellType';
 
@@ -20,7 +20,14 @@ export interface SurfaceProps {
 
 const createCellTypeFactory = () => {
   return new CellTypeFactory([
-    {name: "water", occurrenceRate: 6, material: { color: 0x2277DD }},
+    {
+      name: "water", occurrenceRate: 6, 
+      material: { color: 0x2277DD, transparent: true, opacity: 0.7, side: DoubleSide },
+      transformation: new Matrix4().multiplyMatrices( 
+        new Matrix4().makeScale(1, 0.5, 1), 
+        new Matrix4().makeTranslation(0, -0.1, 0)
+      )
+    },
     {name: "grass", occurrenceRate: 7, material: { color: 0x22CC77 }},
     {name: "sand", occurrenceRate: 4, material: { color: 0xAA9944 }},
     {name: "stone", occurrenceRate: 1, material: { color: 0x666677 }}  
@@ -56,6 +63,7 @@ const createInstancedMesh = (type: CellType, cells: Cell[], totalCells: number) 
     cells.length, "; distribution:", cells.length / totalCells 
   );
   const geometry = new CylinderBufferGeometry(1,1,0.2, 6);
+  geometry.applyMatrix4(type.transformation);
   const material = type.material;
   const mesh = new InstancedMesh(geometry, material, cells.length);
   cells.forEach( (cell, index) => {
