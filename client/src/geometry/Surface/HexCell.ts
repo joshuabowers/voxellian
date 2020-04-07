@@ -10,4 +10,8 @@ export class HexCell implements ICell<CellType> {
     this.type = type;
     this.position = position;
   }
+
+  clone( replacementType: CellType ) {
+    return new HexCell( replacementType, this.position );
+  }
 }

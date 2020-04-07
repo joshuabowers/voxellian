@@ -3,6 +3,7 @@ import { Vector3 } from "three";
 export interface ICell<TCellType> {
   type: TCellType;
   position: Vector3;
+  clone( replacementType: TCellType ): ICell<TCellType>
 }
 
 export interface ICollection<TCell> {
@@ -19,6 +20,24 @@ export interface IFactory<TCellType> {
   random(): TCellType;
 }
 
+export interface ICellularAutomataRule<TCellType> {
+  neighborType: TCellType;
+  density: number;
+  resultType: TCellType;
+}
+
+class Rule<TCellType> implements ICellularAutomataRule<TCellType> {
+  neighborType: TCellType;
+  density: number;
+  resultType: TCellType;
+
+  constructor( props: ICellularAutomataRule<TCellType> ) {
+    this.neighborType = props.neighborType;
+    this.density = props.density;
+    this.resultType = props.resultType;
+  }
+}
+
 export class CellularAutomata<
   TCellType, 
   TCell extends ICell<TCellType>, 
@@ -27,14 +46,17 @@ export class CellularAutomata<
 > {
   currentGeneration: TCollection;
   private factory: TCellTypeFactory;
+  private rules: Rule<TCellType>[];
 
   constructor( cells: TCollection, factory: TCellTypeFactory ) {
     this.currentGeneration = cells;
     this.factory = factory;
+    this.rules = new Array<Rule<TCellType>>();
   }
 
   addRule( neighborType: TCellType, density: number, resultType: TCellType ) {
-
+    const rule = new Rule({ neighborType, density, resultType });
+    this.rules.push( rule );
   }
 
   run( generations: number ) {
@@ -42,12 +64,38 @@ export class CellularAutomata<
       const next = this.currentGeneration.clone() as TCollection;
       this.currentGeneration.forEach( (cell, index) => {
         const neighbors = this.currentGeneration.neighborsOf( cell );
-        /** todo: apply rules */
-        next.set( index, cell );
+        const densities = this.calculateDensities( neighbors );
+        const replacementType = this.applyRules( cell, densities );
+        const replacement = cell.clone( replacementType );
+        next.set( index, replacement as TCell );
       });
       this.currentGeneration = next;
     }
 
     return this.currentGeneration.toArray();
+  }
+
+  private calculateDensities( neighbors: TCell[] ) {
+    const densities = new Map<TCellType, number>();
+
+    neighbors.forEach( cell => {
+      const density = densities.get( cell.type ) || 0;
+      densities.set( cell.type, density + 1 );
+    } );
+
+    return densities;
+  }
+
+  private applyRules( currentCell: TCell, densities: Map<TCellType, number> ) {
+    let replacementType = currentCell.type;
+
+    this.rules.forEach( rule => {
+      const neighborDensity = densities.get( rule.neighborType )
+      if( neighborDensity && neighborDensity <= rule.density ) {
+        replacementType = rule.resultType;
+      }
+    } );
+
+    return replacementType;
   }
 }
