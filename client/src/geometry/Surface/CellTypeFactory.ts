@@ -38,7 +38,9 @@ export class CellTypeFactory {
 
   for( identifier: Symbol | string ) {
     const id = isString(identifier) ? Symbol.for( identifier ) : identifier
-    return this.cellTypes.get(id);
+    const result = this.cellTypes.get(id);
+    if( !result ){ throw new Error(`cannot locate CellType for ${id}`); }
+    return result;
   }
 
   random() {

@@ -11,7 +11,7 @@ export interface ICollection<TCell> {
   neighborsOf(cell: TCell): TCell[];
   set(index: number, cell: TCell): void;
   get(index: number): TCell;
-  clone(): ICollection<TCell>;
+  clone( copy?: boolean ): ICollection<TCell>;
   toArray(): TCell[];
 }
 
@@ -41,17 +41,14 @@ class Rule<TCellType> implements ICellularAutomataRule<TCellType> {
 export class CellularAutomata<
   TCellType, 
   TCell extends ICell<TCellType>, 
-  TCollection extends ICollection<TCell>, 
-  TCellTypeFactory extends IFactory<TCellType>
+  TCollection extends ICollection<TCell>
 > {
   currentGeneration: TCollection;
-  private factory: TCellTypeFactory;
   private rules: Rule<TCellType>[];
 
-  constructor( cells: TCollection, factory: TCellTypeFactory ) {
+  constructor( cells: TCollection, rules?: ICellularAutomataRule<TCellType>[] ) {
     this.currentGeneration = cells;
-    this.factory = factory;
-    this.rules = new Array<Rule<TCellType>>();
+    this.rules = rules || new Array<Rule<TCellType>>();
   }
 
   addRule( neighborType: TCellType, density: number, resultType: TCellType ) {
@@ -60,8 +57,10 @@ export class CellularAutomata<
   }
 
   run( generations: number ) {
+    console.log( 'Running automata for', generations, 'generations' );
     for( let g = 0; g < generations; g++ ){
-      const next = this.currentGeneration.clone() as TCollection;
+      console.log( 'Current generation:', g );
+      const next = this.currentGeneration.clone( false ) as TCollection;
       this.currentGeneration.forEach( (cell, index) => {
         const neighbors = this.currentGeneration.neighborsOf( cell );
         const densities = this.calculateDensities( neighbors );
@@ -79,8 +78,10 @@ export class CellularAutomata<
     const densities = new Map<TCellType, number>();
 
     neighbors.forEach( cell => {
-      const density = densities.get( cell.type ) || 0;
-      densities.set( cell.type, density + 1 );
+      if( cell ) {
+        const density = densities.get( cell.type ) || 0;
+        densities.set( cell.type, density + 1 );  
+      }
     } );
 
     return densities;
@@ -91,7 +92,7 @@ export class CellularAutomata<
 
     this.rules.forEach( rule => {
       const neighborDensity = densities.get( rule.neighborType )
-      if( neighborDensity && neighborDensity <= rule.density ) {
+      if( neighborDensity && neighborDensity > rule.density ) {
         replacementType = rule.resultType;
       }
     } );

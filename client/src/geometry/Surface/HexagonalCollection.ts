@@ -2,6 +2,7 @@ import { ICollection } from "./CellularAutomata";
 import { HexCell } from "./HexCell";
 import { extendHex, defineGrid, Grid, Hex } from 'honeycomb-grid';
 import { CellTypeFactory } from "./CellTypeFactory";
+import { Vector3 } from "three";
 
 export class HexagonalCollection implements ICollection<HexCell> {
   private static Hex = extendHex<HexCell>();
@@ -19,13 +20,19 @@ export class HexagonalCollection implements ICollection<HexCell> {
     } else {
       this.grid = HexagonalCollection.Grid.hexagon({ 
         radius,
-        onCreate: hex => { hex.type = factory.random() }
+        onCreate: hex => { 
+          const point = hex.toPoint();
+          hex.type = factory.random();
+          hex.position = new Vector3(point.x, 0, point.y);
+        }
       });    
     }
   }
 
   forEach( callback: (cell: HexCell, index: number) => void ) {
-    this.grid.forEach( callback );
+    this.grid.forEach( (cell, index) => 
+      callback( this.convertHexToCell( cell ), index ) 
+    );
   }
 
   neighborsOf( cell: HexCell ) {
@@ -40,8 +47,8 @@ export class HexagonalCollection implements ICollection<HexCell> {
     return this.grid.get(index) as HexCell;
   }
 
-  clone() {
-    const copied = HexagonalCollection.Grid(this.grid);
+  clone( copy?: boolean ) {
+    const copied = copy ? HexagonalCollection.Grid(this.grid) : HexagonalCollection.Grid();
     return new HexagonalCollection(this.radius, this.cellTypeFactory, copied);
   }
 
@@ -49,6 +56,10 @@ export class HexagonalCollection implements ICollection<HexCell> {
     const result = new Array<HexCell>();
     this.forEach( cell => result.push( cell ) );
     return result;
+  }
+
+  private convertHexToCell( hex: Hex<HexCell> ) {
+    return new HexCell(hex.type, hex.position);
   }
 
   private convertCellToHex( cell: HexCell ) {

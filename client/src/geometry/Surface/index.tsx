@@ -1,17 +1,12 @@
 import React, { useMemo } from 'react';
-import { extendHex, defineGrid } from 'honeycomb-grid';
+// import { extendHex, defineGrid } from 'honeycomb-grid';
 import { ReactThreeFiber } from 'react-three-fiber';
 import { InstancedMesh, Vector3, CylinderBufferGeometry, Matrix4, DoubleSide } from 'three';
 import { CellTypeFactory } from './CellTypeFactory';
 import { CellType } from './CellType';
-
-interface Cell {
-  type: CellType;
-  position: Vector3;
-}
-
-const Hex = extendHex({ size: 1, type: undefined as CellType | undefined });
-const Grid = defineGrid(Hex);
+import { CellularAutomata } from './CellularAutomata';
+import { HexCell } from './HexCell';
+import { HexagonalCollection } from './HexagonalCollection';
 
 export interface SurfaceProps {
   radius?: number;
@@ -34,30 +29,31 @@ const createCellTypeFactory = () => {
   ]);
 }
 
-const createGrid = (factory: CellTypeFactory, radius: number) => {
-  return Grid.hexagon({ radius: radius, onCreate: (hex) => {
-    hex.type = factory.random();
-  } });
+const createHexagonalCollection = ( radius: number, factory: CellTypeFactory ) => {
+  return new HexagonalCollection( radius, factory );
 }
 
-const runCellularAutomata = (factory: CellTypeFactory, radius: number, generations: number) => {
-  console.log( "Running cellular automata for", generations, "generations");
-  const grid = createGrid(factory, radius);
-
-  for( let g=0; g <= generations; g++ ) {
-
-  }
-
-  const cells = new Array<Cell>();
-  grid.forEach( (hex, index) => {
-    const point = hex.toPoint();
-    if( !hex.type ){ throw new Error("CellType not set for hex"); }
-    cells.push( { type: hex.type, position: new Vector3(point.x, 0, point.y) } );
-  })
-  return cells;
+const createCellularAutomata = ( 
+  collection: HexagonalCollection, 
+  factory: CellTypeFactory 
+) => {
+  return new CellularAutomata( collection, [
+    { neighborType: factory.for('grass'), density: 5, resultType: factory.for('grass') },
+    { neighborType: factory.for('water'), density: 5, resultType: factory.for('water') },
+    { neighborType: factory.for('water'), density: 2, resultType: factory.for('sand') },
+    { neighborType: factory.for('sand'), density: 3, resultType: factory.for('grass') }
+  ] );
 }
 
-const createInstancedMesh = (type: CellType, cells: Cell[], totalCells: number) => {
+const createSurface = (radius: number) => {
+  const factory = createCellTypeFactory();
+  const collection = createHexagonalCollection( radius, factory );
+  const automata = createCellularAutomata( collection, factory );
+  const cells = automata.run( 1 ) as HexCell[];
+  return createInstancedMeshes(cells);
+}
+
+const createInstancedMesh = (type: CellType, cells: HexCell[], totalCells: number) => {
   console.log( 
     "Creating instanced mesh for type", type, "; cells:", 
     cells.length, "; distribution:", cells.length / totalCells 
@@ -72,7 +68,7 @@ const createInstancedMesh = (type: CellType, cells: Cell[], totalCells: number) 
   return mesh;
 }
 
-const createInstancedMeshes = (cells: Cell[]) => {
+const createInstancedMeshes = (cells: HexCell[]) => {
   const meshes = new Array<InstancedMesh>();
   const totalCells = cells.length;
 
@@ -80,7 +76,7 @@ const createInstancedMeshes = (cells: Cell[]) => {
     const group = result.get(item.type) || []
     result.set(item.type, [...group, item]);
     return result;
-  }, new Map<CellType, Cell[]>())
+  }, new Map<CellType, HexCell[]>())
 
   groups.forEach((cells, type) => {
     meshes.push( createInstancedMesh(type, cells, totalCells) )
@@ -90,13 +86,18 @@ const createInstancedMeshes = (cells: Cell[]) => {
 }
 
 export const Surface = ( props: SurfaceProps ) => {
-  const factory = useMemo( () => createCellTypeFactory(), [] );
+  // const factory = useMemo( () => createCellTypeFactory(), [] );
+  // const collection = useMemo( () => createHexagonalCollection( props.radius || 10, factory ), [props, factory] )
+  // const automata = useMemo( () => createCellularAutomata( collection, factory ), [collection, factory] )
+  // const meshes = useMemo(
+  //   () => {
+  //     const cells = automata.run( 1 ) as HexCell[];
+  //     return createInstancedMeshes(cells);
+  //   }, [automata]
+  // );
   const meshes = useMemo(
-    () => {
-      console.log( "CellTypeFactory:", factory );
-      const cells = runCellularAutomata(factory, props.radius || 10, 5);
-      return createInstancedMeshes(cells);
-    }, [props, factory]
+    () => createSurface( props.radius || 10 ),
+    [props]
   );
   return (
     <group position={props.position}>
