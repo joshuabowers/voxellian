@@ -44,7 +44,9 @@ export class HexagonalCollection implements ICollection<HexCell> {
   }
 
   get( index: number ) {
-    return this.grid.get(index) as HexCell;
+    const hex = this.grid.get(index);
+    if( !hex ){ throw new Error(`unable to find cell at index ${index}`); }
+    return this.convertHexToCell( hex );
   }
 
   clone( copy?: boolean ) {
@@ -56,6 +58,10 @@ export class HexagonalCollection implements ICollection<HexCell> {
     const result = new Array<HexCell>();
     this.forEach( cell => result.push( cell ) );
     return result;
+  }
+
+  length() {
+    return this.grid.length;
   }
 
   private convertHexToCell( hex: Hex<HexCell> ) {

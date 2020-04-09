@@ -1,4 +1,5 @@
 import { Vector3 } from "three";
+import { profile } from 'utility/profile';
 
 export interface ICell<TCellType> {
   type: TCellType;
@@ -13,6 +14,7 @@ export interface ICollection<TCell> {
   get(index: number): TCell;
   clone( copy?: boolean ): ICollection<TCell>;
   toArray(): TCell[];
+  length(): number;
 }
 
 export interface IFactory<TCellType> {
@@ -58,18 +60,29 @@ export class CellularAutomata<
 
   run( generations: number ) {
     console.log( 'Running automata for', generations, 'generations' );
-    for( let g = 0; g < generations; g++ ){
-      console.log( 'Current generation:', g );
-      const next = this.currentGeneration.clone( false ) as TCollection;
-      this.currentGeneration.forEach( (cell, index) => {
-        const neighbors = this.currentGeneration.neighborsOf( cell );
-        const densities = this.calculateDensities( neighbors );
-        const replacementType = this.applyRules( cell, densities );
-        const replacement = cell.clone( replacementType );
-        next.set( index, replacement as TCell );
-      });
-      this.currentGeneration = next;
-    }
+    profile( 'All generations', () => {
+      for( let g = 0; g < generations; g++ ){
+        console.log( 'Current generation:', g );
+        profile( `Generation ${g}`, () => {
+          const next = profile( 'TCollection.clone', () => this.currentGeneration.clone( false ) as TCollection );
+          const count = this.currentGeneration.length();
+          for( let index = 0; index < count; index++ ){
+            const cell = this.currentGeneration.get(index);
+            // const neighbors = this.currentGeneration.neighborsOf( cell );
+            const neighbors = new Array<TCell>();
+            const densities = this.calculateDensities( neighbors );
+            const replacementType = this.applyRules( cell, densities );
+            const replacement = cell.clone( replacementType );
+            next.set( index, replacement as TCell );
+          }
+          // this.currentGeneration.forEach( (cell, index) => {
+          //   profile( `Cell[${index}]`, () => {
+          //   } );
+          // });
+          this.currentGeneration = next;  
+        } );
+      }  
+    } );
 
     return this.currentGeneration.toArray();
   }

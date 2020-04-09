@@ -7,6 +7,7 @@ import { CellType } from './CellType';
 import { CellularAutomata } from './CellularAutomata';
 import { HexCell } from './HexCell';
 import { HexagonalCollection } from './HexagonalCollection';
+import { profile } from 'utility/profile';
 
 export interface SurfaceProps {
   radius?: number;
@@ -46,11 +47,11 @@ const createCellularAutomata = (
 }
 
 const createSurface = (radius: number) => {
-  const factory = createCellTypeFactory();
-  const collection = createHexagonalCollection( radius, factory );
-  const automata = createCellularAutomata( collection, factory );
-  const cells = automata.run( 1 ) as HexCell[];
-  return createInstancedMeshes(cells);
+  const factory = profile( 'createCellTypeFactory', () => createCellTypeFactory() );
+  const collection = profile( 'createHexagonalCollection', () => createHexagonalCollection( radius, factory ) );
+  const automata = profile( 'createCellularAutomata', () => createCellularAutomata( collection, factory ) );
+  const cells = profile( 'automata.run', () => automata.run( 1 ) as HexCell[] );
+  return profile( 'createInstancedMeshes', () => createInstancedMeshes(cells) );
 }
 
 const createInstancedMesh = (type: CellType, cells: HexCell[], totalCells: number) => {
